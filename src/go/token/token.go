@@ -90,6 +90,7 @@ const (
 	RBRACE    // }
 	SEMICOLON // ;
 	COLON     // :
+	PIPE      // |>
 	operator_end
 
 	keyword_beg
@@ -199,6 +200,7 @@ var tokens = [...]string{
 	RBRACE:    "}",
 	SEMICOLON: ";",
 	COLON:     ":",
+	PIPE:      "|>",
 
 	BREAK:    "break",
 	CASE:     "case",
@@ -265,16 +267,18 @@ const (
 // is LowestPrecedence.
 func (op Token) Precedence() int {
 	switch op {
-	case LOR:
+	case PIPE:
 		return 1
-	case LAND:
+	case LOR:
 		return 2
-	case EQL, NEQ, LSS, LEQ, GTR, GEQ:
+	case LAND:
 		return 3
-	case ADD, SUB, OR, XOR:
+	case EQL, NEQ, LSS, LEQ, GTR, GEQ:
 		return 4
-	case MUL, QUO, REM, SHL, SHR, AND, AND_NOT:
+	case ADD, SUB, OR, XOR:
 		return 5
+	case MUL, QUO, REM, SHL, SHR, AND, AND_NOT:
+		return 6
 	}
 	return LowestPrec
 }

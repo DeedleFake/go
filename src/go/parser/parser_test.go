@@ -158,6 +158,17 @@ func TestParseExpr(t *testing.T) {
 	}
 }
 
+func TestParsePipe(t *testing.T) {
+	src := "a |> f()"
+	if _, err := ParseExpr(src); err != nil {
+		t.Errorf("ParseExpr(%q): got error %s", src, err)
+	}
+	src = "a |> f(b) |> g(c)"
+	if _, err := ParseExpr(src); err != nil {
+		t.Errorf("ParseExpr(%q): got error %s", src, err)
+	}
+}
+
 func TestColonEqualsScope(t *testing.T) {
 	f, err := ParseFile(token.NewFileSet(), "", `package p; func f() { x, y, z := x, y, z }`, 0)
 	if err != nil {
