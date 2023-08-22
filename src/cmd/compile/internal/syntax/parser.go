@@ -860,9 +860,28 @@ func (p *parser) binaryExpr(x Expr, prec int) Expr {
 		p.next()
 		t.X = x
 		t.Y = p.binaryExpr(nil, tprec)
+		if t.Op == Pipe {
+			x = p.transformPipe(t)
+			continue
+		}
 		x = t
 	}
 	return x
+}
+
+func (p *parser) transformPipe(t *Operation) Expr {
+	call, ok := t.Y.(*CallExpr)
+	if !ok {
+		p.syntaxError(fmt.Sprintf("unexpected %T, expected function call", t.Y))
+		return t
+	}
+	if len(call.ArgList) == 0 {
+		call.ArgList = []Expr{t.X}
+		return call
+	}
+	call.ArgList = append(call.ArgList[:1], call.ArgList...)
+	call.ArgList[0] = t.X
+	return call
 }
 
 // UnaryExpr = PrimaryExpr | unary_op UnaryExpr .

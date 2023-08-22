@@ -235,6 +235,8 @@ var sampleTokens = [...]struct {
 	{_Operator, "!", Not, 0},
 	{_Operator, "~", Tilde, 0},
 
+	{_Operator, "|>", Pipe, precPipe},
+
 	{_Operator, "||", OrOr, precOrOr},
 
 	{_Operator, "&&", AndAnd, precAndAnd},
